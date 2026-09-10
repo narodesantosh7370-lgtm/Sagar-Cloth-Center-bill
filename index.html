@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sagar Cloth Centre</title>
+
+<style>
+body{
+    font-family: Arial;
+    background:#f2f2f2;
+    padding:15px;
+}
+
+.box{
+    max-width:500px;
+    margin:auto;
+    background:white;
+    padding:20px;
+    border-radius:15px;
+}
+
+h1{
+    text-align:center;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    margin:7px 0;
+    box-sizing:border-box;
+}
+
+button{
+    width:100%;
+    padding:13px;
+    margin-top:10px;
+    border:0;
+    border-radius:8px;
+    font-size:16px;
+}
+
+.bill{
+    margin-top:20px;
+    padding:15px;
+    border-top:2px solid black;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h1>SAGAR CLOTH CENTRE</h1>
+
+<p>ग्राहकाचे नाव</p>
+<input id="customer" placeholder="नाव टाका">
+
+<p>वस्तूचे नाव</p>
+<input id="product" placeholder="उदा. Shirt">
+
+<p>किंमत</p>
+<input id="price" type="number" placeholder="किंमत">
+
+<p>Quantity</p>
+<input id="qty" type="number" value="1">
+
+<button onclick="generateBill()">बिल तयार करा</button>
+
+<div class="bill" id="bill"></div>
+
+</div>
+
+<script>
+
+function generateBill(){
+
+let customer =
+document.getElementById("customer").value;
+
+let product =
+document.getElementById("product").value;
+
+let price =
+Number(document.getElementById("price").value);
+
+let qty =
+Number(document.getElementById("qty").value);
+
+let total = price * qty;
+
+document.getElementById("bill").innerHTML =
+
+"<h2>बिल</h2>" +
+"ग्राहक: " + customer + "<br><br>" +
+"वस्तू: " + product + "<br>" +
+"Quantity: " + qty + "<br>" +
+"किंमत: ₹" + price + "<br><br>" +
+"<b>Total: ₹" + total + "</b>";
+
+}
+
+</script>
+
+</body>
+</html>
