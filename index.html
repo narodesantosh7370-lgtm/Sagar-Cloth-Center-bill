@@ -1,106 +1,400 @@
 <!DOCTYPE html>
-<html>
+<html lang="mr">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sagar Cloth Centre</title>
+<title>Sagar Cloth Center - Billing</title>
 
 <style>
+*{box-sizing:border-box}
+
 body{
-    font-family: Arial;
-    background:#f2f2f2;
-    padding:15px;
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f2f2f2;
+  padding:15px;
 }
 
-.box{
-    max-width:500px;
-    margin:auto;
-    background:white;
-    padding:20px;
-    border-radius:15px;
+.container{
+  max-width:600px;
+  margin:auto;
 }
 
-h1{
-    text-align:center;
+.header{
+  background:#111827;
+  color:white;
+  padding:20px;
+  border-radius:15px;
+  text-align:center;
+  margin-bottom:15px;
 }
 
-input{
-    width:100%;
-    padding:12px;
-    margin:7px 0;
-    box-sizing:border-box;
+.header h1{
+  margin:0;
+  font-size:25px;
+}
+
+.header p{
+  margin:7px 0 0;
+  color:#ddd;
+}
+
+.card{
+  background:white;
+  padding:18px;
+  border-radius:15px;
+  margin-bottom:15px;
+  box-shadow:0 2px 8px #0001;
+}
+
+h2{
+  margin-top:0;
+  font-size:20px;
+}
+
+label{
+  display:block;
+  margin-top:10px;
+  font-weight:bold;
+}
+
+input,select{
+  width:100%;
+  padding:12px;
+  margin-top:5px;
+  border:1px solid #ccc;
+  border-radius:8px;
+  font-size:16px;
+}
+
+.item{
+  border:1px solid #ddd;
+  padding:12px;
+  border-radius:10px;
+  margin-bottom:10px;
+}
+
+.row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
 }
 
 button{
-    width:100%;
-    padding:13px;
-    margin-top:10px;
-    border:0;
-    border-radius:8px;
-    font-size:16px;
+  border:0;
+  border-radius:9px;
+  padding:12px 16px;
+  font-size:16px;
+  cursor:pointer;
+}
+
+.add{
+  background:#2563eb;
+  color:white;
+  width:100%;
+}
+
+.remove{
+  background:#dc2626;
+  color:white;
+  margin-top:10px;
+  width:100%;
+}
+
+.generate{
+  background:#16a34a;
+  color:white;
+  width:100%;
+  font-size:18px;
+  margin-top:15px;
+}
+
+.print{
+  background:#111827;
+  color:white;
+  width:100%;
+  margin-top:10px;
+}
+
+.total{
+  font-size:22px;
+  font-weight:bold;
+  text-align:right;
+  margin-top:15px;
 }
 
 .bill{
-    margin-top:20px;
-    padding:15px;
-    border-top:2px solid black;
+  display:none;
+  background:white;
+  padding:20px;
+  border-radius:10px;
+}
+
+.bill h2{
+  text-align:center;
+}
+
+.bill table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:15px;
+}
+
+.bill th,.bill td{
+  border:1px solid #aaa;
+  padding:8px;
+  text-align:left;
+}
+
+.bill .grand{
+  text-align:right;
+  font-size:20px;
+  font-weight:bold;
+}
+
+@media print{
+  body{
+    background:white;
+    padding:0;
+  }
+
+  .container > *:not(.bill){
+    display:none !important;
+  }
+
+  .bill{
+    display:block !important;
+  }
+
+  .print{
+    display:none !important;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<div class="box">
+<div class="container">
 
-<h1>SAGAR CLOTH CENTRE</h1>
+<div class="header">
+  <h1>Sagar Cloth Center</h1>
+  <p>Billing Software</p>
+</div>
 
-<p>ग्राहकाचे नाव</p>
-<input id="customer" placeholder="नाव टाका">
+<div class="card">
 
-<p>वस्तूचे नाव</p>
-<input id="product" placeholder="उदा. Shirt">
+<h2>ग्राहकाची माहिती</h2>
 
-<p>किंमत</p>
-<input id="price" type="number" placeholder="किंमत">
+<label>ग्राहकाचे नाव</label>
+<input id="customerName" placeholder="ग्राहकाचे नाव">
 
-<p>Quantity</p>
-<input id="qty" type="number" value="1">
+<label>मोबाईल नंबर</label>
+<input id="mobile" type="tel" placeholder="मोबाईल नंबर">
 
-<button onclick="generateBill()">बिल तयार करा</button>
+<label>Payment</label>
+<select id="payment">
+  <option>Cash</option>
+  <option>UPI</option>
+  <option>Credit</option>
+</select>
 
-<div class="bill" id="bill"></div>
+</div>
+
+<div class="card">
+
+<h2>कपड्याची माहिती</h2>
+
+<div id="items"></div>
+
+<button class="add" onclick="addItem()">+ कपडा जोडा</button>
+
+<label>Discount (₹)</label>
+<input id="discount" type="number" value="0" oninput="calculate()">
+
+<div class="total">
+  Total: ₹ <span id="total">0.00</span>
+</div>
+
+<button class="generate" onclick="generateBill()">
+  🧾 बिल तयार करा
+</button>
+
+</div>
+
+<div class="bill" id="bill">
+
+<h2>SAGAR CLOTH CENTER</h2>
+
+<p><b>Bill No:</b> <span id="billNo"></span></p>
+<p><b>Date:</b> <span id="billDate"></span></p>
+
+<hr>
+
+<p><b>Customer:</b> <span id="billCustomer"></span></p>
+<p><b>Mobile:</b> <span id="billMobile"></span></p>
+<p><b>Payment:</b> <span id="billPayment"></span></p>
+
+<table>
+<thead>
+<tr>
+<th>कपडा</th>
+<th>Qty</th>
+<th>Rate</th>
+<th>Total</th>
+</tr>
+</thead>
+
+<tbody id="billItems"></tbody>
+
+</table>
+
+<p class="grand">
+Discount: ₹ <span id="billDiscount">0</span><br>
+Grand Total: ₹ <span id="billTotal">0</span>
+</p>
+
+<p style="text-align:center">
+धन्यवाद! पुन्हा भेट द्या.
+</p>
+
+<button class="print" onclick="window.print()">
+🖨️ बिल Print करा
+</button>
+
+</div>
 
 </div>
 
 <script>
 
-function generateBill(){
+let itemNumber = 0;
 
-let customer =
-document.getElementById("customer").value;
+function addItem(){
 
-let product =
-document.getElementById("product").value;
+  itemNumber++;
 
-let price =
-Number(document.getElementById("price").value);
+  const div = document.createElement("div");
 
-let qty =
-Number(document.getElementById("qty").value);
+  div.className = "item";
 
-let total = price * qty;
+  div.innerHTML = `
+    <label>कपड्याचे नाव</label>
+    <input class="cloth" placeholder="उदा. Shirt / Pant / Saree">
 
-document.getElementById("bill").innerHTML =
+    <div class="row">
 
-"<h2>बिल</h2>" +
-"ग्राहक: " + customer + "<br><br>" +
-"वस्तू: " + product + "<br>" +
-"Quantity: " + qty + "<br>" +
-"किंमत: ₹" + price + "<br><br>" +
-"<b>Total: ₹" + total + "</b>";
+      <div>
+        <label>Quantity</label>
+        <input class="qty" type="number" value="1" min="1"
+        oninput="calculate()">
+      </div>
 
+      <div>
+        <label>Rate (₹)</label>
+        <input class="rate" type="number" value="0" min="0"
+        oninput="calculate()">
+      </div>
+
+    </div>
+
+    <button class="remove" onclick="this.parentElement.remove();calculate()">
+      कपडा काढा
+    </button>
+  `;
+
+  document.getElementById("items").appendChild(div);
+
+  calculate();
 }
 
-</script>
+function calculate(){
 
-</body>
-</html>
+  let total = 0;
+
+  const items = document.querySelectorAll(".item");
+
+  items.forEach(item => {
+
+    const qty = Number(item.querySelector(".qty").value) || 0;
+    const rate = Number(item.querySelector(".rate").value) || 0;
+
+    total += qty * rate;
+
+  });
+
+  const discount =
+    Number(document.getElementById("discount").value) || 0;
+
+  total = Math.max(0,total-discount);
+
+  document.getElementById("total").innerText =
+    total.toFixed(2);
+}
+
+function generateBill(){
+
+  const customer =
+    document.getElementById("customerName").value || "Walk-in Customer";
+
+  const mobile =
+    document.getElementById("mobile").value || "-";
+
+  const payment =
+    document.getElementById("payment").value;
+
+  const discount =
+    Number(document.getElementById("discount").value) || 0;
+
+  let subtotal = 0;
+
+  let billRows = "";
+
+  document.querySelectorAll(".item").forEach(item => {
+
+    const cloth =
+      item.querySelector(".cloth").value || "Item";
+
+    const qty =
+      Number(item.querySelector(".qty").value) || 0;
+
+    const rate =
+      Number(item.querySelector(".rate").value) || 0;
+
+    const amount = qty * rate;
+
+    subtotal += amount;
+
+    billRows += `
+      <tr>
+        <td>${cloth}</td>
+        <td>${qty}</td>
+        <td>₹${rate.toFixed(2)}</td>
+        <td>₹${amount.toFixed(2)}</td>
+      </tr>
+    `;
+
+  });
+
+  const grandTotal =
+    Math.max(0,subtotal-discount);
+
+  const billNumber =
+    "SC-" + Date.now().toString().slice(-6);
+
+  const date =
+    new Date().toLocaleString("en-IN");
+
+  document.getElementById("billNo").innerText =
+    billNumber;
+
+  document.getElementById("billDate").innerText =
+    date;
+
+  document.getElementById("billCustomer").innerText =
+    customer;
+
+  document.getElementById("billMobile").innerText =
+    mobile;
+
+  document.getElementById("
